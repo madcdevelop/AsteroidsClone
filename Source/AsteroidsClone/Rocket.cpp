@@ -27,7 +27,7 @@ ARocket::ARocket()
 void ARocket::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SetLifeSpan(0.5f);
 }
 
 // Called every frame
@@ -44,10 +44,5 @@ void ARocket::OnRocketHit(AActor * SelfActor, AActor * OtherActor, FVector Norma
 		Asteroid->Destroy();
 		Destroy();
 	}
-	else 
-	{
-		Destroy();
-	}
-
 }
 
