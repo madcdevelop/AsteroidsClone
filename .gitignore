@@ -274,3 +274,6 @@ __pycache__/
 *.sdf
 
 *.suo
+
+# FighterSpaceship Meshes, textures
+/Content/FighterSpaceship

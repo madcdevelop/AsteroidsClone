@@ -9,6 +9,7 @@ AAsteroid::AAsteroid()
 	PrimaryActorTick.bCanEverTick = true;
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+    StaticMesh->SetLockedAxis(EDOFMode::XYPlane);
 
 	SetRootComponent(StaticMesh);
 
@@ -27,4 +28,6 @@ void AAsteroid::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+
 

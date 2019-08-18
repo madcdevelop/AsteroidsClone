@@ -10,7 +10,10 @@
 #include "Rocket.generated.h"
 
 
-
+/* 
+The Rocket can be fired by the Ship class. 
+The Rocket explodes and destroys an object once it hits it.
+*/
 UCLASS()
 class ASTEROIDSCLONE_API ARocket : public AActor
 {
@@ -20,21 +23,33 @@ public:
 	// Sets default values for this actor's properties
 	ARocket();
 
+    // Rocket original location
+    FVector RocketOriginalLocation;
+    // Rocket Distance from Origin
+    float RocketDistance;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* RocketMesh;
 
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UProjectileMovementComponent* RocketMovement;
+
+    UPROPERTY(EditAnywhere, Category = "Spawning")
+    TSubclassOf<class AMediumAsteroid> MediumAsteroidClass;
+
+    UPROPERTY(EditAnywhere, Category = "Spawning")
+    TSubclassOf<class ASmallAsteroid> SmallAsteroidClass;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION()
+    /** Destroys asteroid and Rocket upon the Rocket hitting the Asteroid. */
+	UFUNCTION(BlueprintCallable, Category = "Projectile")
 	void OnRocketHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
-
+    
 };

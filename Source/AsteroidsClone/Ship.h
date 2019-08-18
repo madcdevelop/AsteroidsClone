@@ -6,6 +6,9 @@
 #include "GameFramework/Pawn.h"
 #include "Ship.generated.h"
 
+/* 
+The Ship class moves around the environment and can interact with several the asteroids by shooting them. If it is hit by an Asteroid it is destroyed.
+*/
 UCLASS()
 class ASTEROIDSCLONE_API AShip : public APawn
 {
@@ -28,9 +31,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Shooting")
 	TSubclassOf<class ARocket> RocketClass;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	class UFloatingPawnMovement* FloatingPawnMovement;
 
-	UPROPERTY(EditAnywhere, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* StaticMesh;
 
 public:	

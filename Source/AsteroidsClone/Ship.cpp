@@ -15,6 +15,7 @@ AShip::AShip()
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>("PawnMovement");
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
+    StaticMesh->SetConstraintMode(EDOFMode::XYPlane);
 
 	SetRootComponent(StaticMesh);
 
@@ -26,7 +27,6 @@ AShip::AShip()
 void AShip::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AShip::MoveForward(float Amount) 
@@ -46,7 +46,7 @@ void AShip::RotateRight(float Amount)
 
 void AShip::Shoot()
 {
-	if (RocketClass)
+	if (RocketClass != nullptr)
 	{
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -55,7 +55,7 @@ void AShip::Shoot()
 		SpawnParams.Instigator = this;
 
 		FTransform RocketSpawnTransform;
-		RocketSpawnTransform.SetLocation(GetActorForwardVector() * 80.0f + GetActorLocation());
+		RocketSpawnTransform.SetLocation(GetActorForwardVector() * 100.0f + GetActorLocation());
 		RocketSpawnTransform.SetRotation(GetActorRotation().Quaternion());
 		RocketSpawnTransform.SetScale3D(FVector(1.0f));
 
