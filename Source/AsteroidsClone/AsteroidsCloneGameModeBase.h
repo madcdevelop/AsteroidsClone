@@ -17,5 +17,7 @@ class ASTEROIDSCLONE_API AAsteroidsCloneGameModeBase : public AGameModeBase
 public:
 
 	AAsteroidsCloneGameModeBase();
+
+    void OnRocketHit(int32 pointsEarned);
 	
 };

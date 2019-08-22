@@ -6,6 +6,7 @@
 #include "LargeAsteroid.h"
 #include "MediumAsteroid.h"
 #include "SmallAsteroid.h"
+#include "AsteroidsCloneGameModeBase.h"
 
 // Sets default values
 ARocket::ARocket()
@@ -76,6 +77,11 @@ void ARocket::OnRocketHit(AActor* SelfActor, AActor* OtherActor, FVector NormalI
 
         Destroy();
 
+        if (AAsteroidsCloneGameModeBase* GM = Cast<AAsteroidsCloneGameModeBase>(GetWorld()->GetAuthGameMode()))
+        {
+            GM->OnRocketHit(20);
+        }
+
     }
 
     AMediumAsteroid* MediumAsteroid = Cast<AMediumAsteroid>(OtherActor);
@@ -104,6 +110,11 @@ void ARocket::OnRocketHit(AActor* SelfActor, AActor* OtherActor, FVector NormalI
         MediumAsteroid->Destroy();
 
         Destroy();
+
+        if (AAsteroidsCloneGameModeBase* GM = Cast<AAsteroidsCloneGameModeBase>(GetWorld()->GetAuthGameMode()))
+        {
+            GM->OnRocketHit(50);
+        }
     }
 
     ASmallAsteroid* SmallAsteroid = Cast<ASmallAsteroid>(OtherActor);
@@ -111,6 +122,11 @@ void ARocket::OnRocketHit(AActor* SelfActor, AActor* OtherActor, FVector NormalI
         SmallAsteroid->Destroy();
 
         Destroy();
+        
+        if (AAsteroidsCloneGameModeBase* GM = Cast<AAsteroidsCloneGameModeBase>(GetWorld()->GetAuthGameMode()))
+        {
+            GM->OnRocketHit(100);
+        }
     }
 
 }

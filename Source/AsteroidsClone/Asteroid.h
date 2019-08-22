@@ -20,7 +20,15 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UStaticMeshComponent* StaticMesh;
+	UStaticMeshComponent* AsteroidMesh;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+    class UProjectileMovementComponent* AsteroidMovement;
+
+    //FVector MoveDirection;
+
+    //UPROPERTY(EditAnywhere, Category = "Movement")
+    //float MoveScale;
 
 public:	
 	// Called every frame

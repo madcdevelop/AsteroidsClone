@@ -25,7 +25,7 @@ public:
 
     // Rocket original location
     FVector RocketOriginalLocation;
-    // Rocket Distance from Origin
+    // Distance Rocket has traveled
     float RocketDistance;
 
 protected:
