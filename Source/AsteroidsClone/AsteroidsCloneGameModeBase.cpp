@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "AsteroidsCloneGameModeBase.h"
+#include "AsteroidsClone.h"
 #include "Ship.h"
 #include "UObject/ConstructorHelpers.h"
 #include "AsteroidsCloneGameState.h"
@@ -13,6 +14,29 @@ AAsteroidsCloneGameModeBase::AAsteroidsCloneGameModeBase()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
+}
+
+void AAsteroidsCloneGameModeBase::BeginPlay()
+{
+    Super::BeginPlay();
+    ChangeMenuWidget(StartingWidgetClass);
+}
+
+void AAsteroidsCloneGameModeBase::ChangeMenuWidget(TSubclassOf<UUserWidget> NewWidgetClass)
+{
+    if (CurrentWidget != nullptr)
+    {
+        CurrentWidget->RemoveFromViewport();
+        CurrentWidget = nullptr;
+    }
+    if (NewWidgetClass != nullptr)
+    {
+        CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), NewWidgetClass);
+        if (CurrentWidget != nullptr)
+        {
+            CurrentWidget->AddToViewport();
+        }
+    }
 }
 
 void AAsteroidsCloneGameModeBase::OnRocketHit(int32 pointsEarned)
