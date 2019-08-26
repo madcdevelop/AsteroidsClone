@@ -25,6 +25,10 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
     class UProjectileMovementComponent* AsteroidMovement;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
+    TSubclassOf<class AShip> ShipClass;
+
+
     //FVector MoveDirection;
 
     //UPROPERTY(EditAnywhere, Category = "Movement")
@@ -33,5 +37,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+    /* Destroys Ship when Ship hits the Asteroid */
+    UFUNCTION(BlueprintCallable, Category = "Collision")
+    void OnShipHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
 
 };

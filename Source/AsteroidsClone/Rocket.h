@@ -38,10 +38,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UProjectileMovementComponent* RocketMovement;
 
-    UPROPERTY(EditAnywhere, Category = "Spawning")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
     TSubclassOf<class AMediumAsteroid> MediumAsteroidClass;
 
-    UPROPERTY(EditAnywhere, Category = "Spawning")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
     TSubclassOf<class ASmallAsteroid> SmallAsteroidClass;
 
 public:	
