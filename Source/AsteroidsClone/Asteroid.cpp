@@ -14,9 +14,12 @@ AAsteroid::AAsteroid()
 	AsteroidMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
     AsteroidMesh->SetConstraintMode(EDOFMode::XYPlane);
 
+    AsteroidMovement = CreateDefaultSubobject<UProjectileMovementComponent>("AsteroidMovement");
+    AsteroidMovement->ProjectileGravityScale = 0.0f;
+
 	SetRootComponent(AsteroidMesh);
 
-    //MoveScale = 200.0f;
+    MoveScale = 10.0f;
 }
 
 // Called when the game starts or when spawned
@@ -25,7 +28,7 @@ void AAsteroid::BeginPlay()
 	Super::BeginPlay();
     OnActorHit.AddDynamic(this, &AAsteroid::OnShipHit);
 
-    //MoveDirection = FMath::VRand();
+    MoveDirection = FVector(FMath::RandRange(-5.0f, 5.0f), FMath::RandRange(-5.0f, 5.0f), 0.0f) ;
 	
 }
 
@@ -34,10 +37,10 @@ void AAsteroid::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    //FVector MoveDelta = (MoveDirection * (FMath::Sin(GetWorld()->GetTimeSeconds() + DeltaTime)
-    //    - FMath::Sin(GetWorld()->GetTimeSeconds()))) * MoveScale;
+    //FVector MoveDelta = (MoveDirection * (FMath::Sin(GetWorld()->GetTimeSeconds() + DeltaTime))) * MoveScale;
 
-    //AddActorWorldOffset(MoveDelta, true);
+    // TODO: Work on teleport when asteroids or ship hit invisible wall.
+    AddActorWorldOffset(MoveDirection, false, nullptr, ETeleportType::TeleportPhysics);
 
 }
 

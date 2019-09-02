@@ -5,6 +5,6 @@
 void APlayerShipController::BeginPlay()
 {
     Super::BeginPlay();
-    SetInputMode(FInputModeGameAndUI());
+    SetInputMode(FInputModeUIOnly());
 }
 

@@ -29,10 +29,10 @@ protected:
     TSubclassOf<class AShip> ShipClass;
 
 
-    //FVector MoveDirection;
+    FVector MoveDirection;
 
-    //UPROPERTY(EditAnywhere, Category = "Movement")
-    //float MoveScale;
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float MoveScale;
 
 public:	
 	// Called every frame
