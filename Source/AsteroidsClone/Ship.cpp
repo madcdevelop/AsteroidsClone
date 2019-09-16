@@ -13,6 +13,9 @@ AShip::AShip()
 	PrimaryActorTick.bCanEverTick = true;
 
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>("PawnMovement");
+    FloatingPawnMovement->MaxSpeed = 2000.0f;
+    FloatingPawnMovement->Acceleration = 500.0f;
+    FloatingPawnMovement->Deceleration = 300.0f;
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
     StaticMesh->SetConstraintMode(EDOFMode::XYPlane);
@@ -27,11 +30,14 @@ AShip::AShip()
 void AShip::BeginPlay()
 {
 	Super::BeginPlay();
+    
 }
 
 void AShip::MoveForward(float Amount) 
 {
-	FloatingPawnMovement->AddInputVector(GetActorForwardVector() * Amount);
+    float ShipAcceleration = FloatingPawnMovement->Acceleration;
+	FloatingPawnMovement->AddInputVector(GetActorForwardVector() * Amount * ShipAcceleration);
+    
 }
 
 void AShip::RotateLeft(float Amount)
@@ -62,6 +68,7 @@ void AShip::Shoot()
 		GetWorld()->SpawnActor<ARocket>(RocketClass, RocketSpawnTransform, SpawnParams);
 	}
 }
+
 
 // Called every frame
 void AShip::Tick(float DeltaTime)

@@ -28,10 +28,9 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
     TSubclassOf<class AShip> ShipClass;
 
-
     FVector MoveDirection;
 
-    UPROPERTY(EditAnywhere, Category = "Movement")
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
     float MoveScale;
 
 public:	
