@@ -36,11 +36,10 @@ protected:
     UFUNCTION()
     void SpawnShip();
 
-    UFUNCTION()
-    float RandomUnitNumber();
-
+    float RandomDegrees;
     float RandomX;
     float RandomY;
+
 
 
 public:	

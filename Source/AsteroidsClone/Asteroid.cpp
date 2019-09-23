@@ -30,8 +30,10 @@ void AAsteroid::BeginPlay()
 	Super::BeginPlay();
     OnActorHit.AddDynamic(this, &AAsteroid::OnShipHit);
 
-    RandomX = RandomUnitNumber();
-    RandomY = RandomUnitNumber();
+    RandomDegrees = FMath::FRandRange(0.0f, 360.0f);
+    //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, FString::Printf(TEXT("Angle of Asteroid = %f"), RandomDegrees));
+    RandomX = FMath::Cos(FMath::DegreesToRadians(RandomDegrees));
+    RandomY = FMath::Sin(FMath::DegreesToRadians(RandomDegrees));
 
     MoveDirection = FVector(RandomX, RandomY, 0.0f);
 	
@@ -53,14 +55,10 @@ void AAsteroid::OnShipHit(AActor* SelfActor, AActor* OtherActor, FVector NormalI
     AShip* Ship = Cast<AShip>(OtherActor);
     if (Ship != nullptr)
     {
-        
         if (ShipClass != nullptr)
         {
-
             Ship->Destroy();
-
             GetWorld()->GetTimerManager().SetTimer(SpawnDelayHandle, this, &AAsteroid::SpawnShip, 3.0f, false);
-            
         }
         
     }
@@ -82,16 +80,5 @@ void AAsteroid::SpawnShip()
 
     GetWorldTimerManager().ClearTimer(SpawnDelayHandle);
 }
-
-float AAsteroid::RandomUnitNumber()
-{
-    bool bRandom = FMath::RandBool();
-
-    if (bRandom == true)
-        return 1.0f;
-    else
-        return -1.0f;
-}
-
 
 
