@@ -20,7 +20,8 @@ AAsteroid::AAsteroid()
 
 	SetRootComponent(AsteroidMesh);
 
-    MoveScale = 0.8f;
+    MoveScale = 2.0f;
+
 }
 
 // Called when the game starts or when spawned
@@ -29,7 +30,10 @@ void AAsteroid::BeginPlay()
 	Super::BeginPlay();
     OnActorHit.AddDynamic(this, &AAsteroid::OnShipHit);
 
-    MoveDirection = FVector(FMath::RandRange(-5.0f, 5.0f), FMath::RandRange(-5.0f, 5.0f), 0.0f) ;
+    RandomX = RandomUnitNumber();
+    RandomY = RandomUnitNumber();
+
+    MoveDirection = FVector(RandomX, RandomY, 0.0f);
 	
 }
 
@@ -49,27 +53,44 @@ void AAsteroid::OnShipHit(AActor* SelfActor, AActor* OtherActor, FVector NormalI
     AShip* Ship = Cast<AShip>(OtherActor);
     if (Ship != nullptr)
     {
-        FActorSpawnParameters SpawnParams;
-        SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-        SpawnParams.bNoFail = true;
-
-        FTransform ShipSpawnTransform;
-        FTimerHandle UnusedHandle;
-
+        
         if (ShipClass != nullptr)
         {
+
             Ship->Destroy();
 
-            ShipSpawnTransform.SetLocation(FVector(0.0f,0.0f,190.0f));
-            ShipSpawnTransform.SetRotation(FRotator(0.0f, 0.0f, 0.0f).Quaternion());
-            ShipSpawnTransform.SetScale3D(FVector::OneVector);
-
-            //GetWorldTimerManager().SetTimer(UnusedHandle, this, &AShip::TimerElapsed, TimerDelay, false);
-
-            GetWorld()->SpawnActor<AShip>(ShipClass, ShipSpawnTransform, SpawnParams);
+            GetWorld()->GetTimerManager().SetTimer(SpawnDelayHandle, this, &AAsteroid::SpawnShip, 3.0f, false);
+            
         }
         
     }
+}
+
+void AAsteroid::SpawnShip()
+{
+    FActorSpawnParameters ShipSpawnParams;
+    ShipSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+    ShipSpawnParams.bNoFail = true;
+
+    FTransform ShipSpawnTransform;
+
+    ShipSpawnTransform.SetLocation(FVector(0.0f, 0.0f, 190.0f));
+    ShipSpawnTransform.SetRotation(FRotator(0.0f, 0.0f, 0.0f).Quaternion());
+    ShipSpawnTransform.SetScale3D(FVector::OneVector);
+            
+    GetWorld()->SpawnActor<AShip>(ShipClass, ShipSpawnTransform, ShipSpawnParams);
+
+    GetWorldTimerManager().ClearTimer(SpawnDelayHandle);
+}
+
+float AAsteroid::RandomUnitNumber()
+{
+    bool bRandom = FMath::RandBool();
+
+    if (bRandom == true)
+        return 1.0f;
+    else
+        return -1.0f;
 }
 
 

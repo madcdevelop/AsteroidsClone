@@ -33,6 +33,16 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
     float MoveScale;
 
+    UFUNCTION()
+    void SpawnShip();
+
+    UFUNCTION()
+    float RandomUnitNumber();
+
+    float RandomX;
+    float RandomY;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -40,6 +50,9 @@ public:
     /* Destroys Ship when Ship hits the Asteroid */
     UFUNCTION(BlueprintCallable, Category = "Collision")
     void OnShipHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
+    /** Handles the delay when spawning */
+    FTimerHandle SpawnDelayHandle;
 
 
 };

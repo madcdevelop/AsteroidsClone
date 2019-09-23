@@ -23,14 +23,12 @@ AShip::AShip()
 	SetRootComponent(StaticMesh);
 
 	bUseControllerRotationYaw = true;
-
 }
 
-// Called when the game starts or when spawned
+// Called when the game starts or when spawned.
 void AShip::BeginPlay()
 {
 	Super::BeginPlay();
-    
 }
 
 void AShip::MoveForward(float Amount) 
@@ -68,7 +66,6 @@ void AShip::Shoot()
 		GetWorld()->SpawnActor<ARocket>(RocketClass, RocketSpawnTransform, SpawnParams);
 	}
 }
-
 
 // Called every frame
 void AShip::Tick(float DeltaTime)
