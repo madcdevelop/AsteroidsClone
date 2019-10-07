@@ -1,12 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Rocket.h"
-#include "Classes/GameFramework/ProjectileMovementComponent.h"
 #include "Asteroid.h"
 #include "LargeAsteroid.h"
 #include "MediumAsteroid.h"
 #include "SmallAsteroid.h"
 #include "AsteroidsCloneGameModeBase.h"
+#include "AsteroidsCloneGameState.h"
+
+#include "Classes/GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
 ARocket::ARocket()
@@ -24,26 +26,29 @@ ARocket::ARocket()
 	RocketMovement->MaxSpeed = 1000.0f;
 	RocketMovement->ProjectileGravityScale = 0.0f;
 
+    RocketMaxDistance = 400.0f;
+
 }
 
-// Called when the game starts or when spawned
-void ARocket::BeginPlay()
-{
-	Super::BeginPlay();
-    OnActorHit.AddDynamic(this, &ARocket::OnRocketHit);
-
-    RocketOriginalLocation = GetActorLocation();
-}
 
 // Called every frame
 void ARocket::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+    bool bScreenWrapRocket = false;
+    bScreenWrapRocket = WrapAroundWorld();
+
+    if (bScreenWrapRocket)
+    {
+        RocketOriginalLocation = GetActorLocation();
+    }
+
     FVector RocketCurrentLocation = GetActorLocation();
     RocketDistance = FVector::Dist(RocketCurrentLocation, RocketOriginalLocation);
-    if (RocketDistance >= 300.0f)
+    if (RocketDistance >= RocketMaxDistance)
         Destroy();
+
 
 }
 
@@ -131,3 +136,51 @@ void ARocket::OnRocketHit(AActor* SelfActor, AActor* OtherActor, FVector NormalI
 
 }
 
+
+// Called when the game starts or when spawned
+void ARocket::BeginPlay()
+{
+	Super::BeginPlay();
+    OnActorHit.AddDynamic(this, &ARocket::OnRocketHit);
+
+    RocketOriginalLocation = GetActorLocation();
+}
+
+bool ARocket::WrapAroundWorld()
+{
+    AAsteroidsCloneGameState* GameState = Cast<AAsteroidsCloneGameState>(GetWorld()->GetGameState());
+    FVector Location = GetActorLocation();
+    bool bUpdateLocation = false;
+
+    if (Location.X < -GameState->AsteroidWorldSizeX) 
+    {
+        Location.X = GameState->AsteroidWorldSizeX;
+        bUpdateLocation = true;
+    }
+    else if (Location.X > GameState->AsteroidWorldSizeX) 
+    {
+        Location.X = -GameState->AsteroidWorldSizeX;
+        bUpdateLocation = true;
+    }
+
+    if (Location.Y < -GameState->AsteroidWorldSizeY) 
+    {
+        Location.Y = GameState->AsteroidWorldSizeY;
+        bUpdateLocation = true;
+    }
+    else if (Location.Y > GameState->AsteroidWorldSizeY) 
+    {
+        Location.Y = -GameState->AsteroidWorldSizeY;
+        bUpdateLocation = true;
+    }
+
+    if (bUpdateLocation) 
+    {
+        SetActorLocation(Location);
+        return true;
+    }
+    else 
+    {
+        return false;    
+    }
+}

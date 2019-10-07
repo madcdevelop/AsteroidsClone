@@ -15,11 +15,35 @@ public:
 	// Sets default values for this actor's properties
 	AAsteroid();
 
+    // Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+    /* Destroys Ship when Ship hits the Asteroid */
+    UFUNCTION(BlueprintCallable, Category = "Collision")
+    void OnShipHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+    void AsteroidRandomMovement();
+
+    void SpawnShip();
+
+private:
+    
+    void WrapAroundWorld();
+
+public:	
+
+    // Handles the delay when spawning
+    FTimerHandle SpawnDelayHandle;
+
+    FTimerHandle SpawnInvincibleHandle;
+
+protected:
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* AsteroidMesh;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -28,30 +52,13 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
     TSubclassOf<class AShip> ShipClass;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
     FVector MoveDirection;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
     float MoveScale;
 
-    UFUNCTION()
-    void SpawnShip();
-
-    float RandomDegrees;
-    float RandomX;
-    float RandomY;
-
-
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-    /* Destroys Ship when Ship hits the Asteroid */
-    UFUNCTION(BlueprintCallable, Category = "Collision")
-    void OnShipHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
-
-    /** Handles the delay when spawning */
-    FTimerHandle SpawnDelayHandle;
+private:
 
 
 };

@@ -33,6 +33,8 @@ protected:
     /** Called when the game starts. */
     virtual void BeginPlay() override;
 
+protected:
+    
     /** The widget class we will use as our menu when the game starts. */
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UMG Game")
     TSubclassOf<class UUserWidget> StartingWidgetClass;
@@ -40,4 +42,5 @@ protected:
     /** The widget instance that we are using as our menu. */
     UPROPERTY()
     UUserWidget* CurrentWidget;
+
 };

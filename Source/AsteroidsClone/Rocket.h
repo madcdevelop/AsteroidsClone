@@ -23,16 +23,33 @@ public:
 	// Sets default values for this actor's properties
 	ARocket();
 
-    // Rocket original location
-    FVector RocketOriginalLocation;
-    // Distance Rocket has traveled
-    float RocketDistance;
+    // Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+    /** Destroys asteroid and Rocket upon the Rocket hitting the Asteroid. */
+	UFUNCTION(BlueprintCallable, Category = "Projectile")
+	void OnRocketHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+private:
+    
+    bool WrapAroundWorld();
+
+public:	
+    
+    FVector RocketOriginalLocation;
+
+    float RocketDistance;
+
+    UPROPERTY(EditAnywhere, Category = "Projectile")
+    float RocketMaxDistance;
+   
+protected:
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* RocketMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
@@ -44,12 +61,4 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
     TSubclassOf<class ASmallAsteroid> SmallAsteroidClass;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-    /** Destroys asteroid and Rocket upon the Rocket hitting the Asteroid. */
-	UFUNCTION(BlueprintCallable, Category = "Projectile")
-	void OnRocketHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
-    
 };

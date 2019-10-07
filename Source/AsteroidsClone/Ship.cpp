@@ -2,6 +2,7 @@
 
 #include "Ship.h"
 #include "Rocket.h"
+#include "AsteroidsCloneGameState.h"
 
 #include "Classes/Components/InputComponent.h"
 #include "Classes/GameFramework/FloatingPawnMovement.h"
@@ -15,7 +16,7 @@ AShip::AShip()
 	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>("PawnMovement");
     FloatingPawnMovement->MaxSpeed = 2000.0f;
     FloatingPawnMovement->Acceleration = 500.0f;
-    FloatingPawnMovement->Deceleration = 300.0f;
+    FloatingPawnMovement->Deceleration = 150.0f;
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
     StaticMesh->SetConstraintMode(EDOFMode::XYPlane);
@@ -23,19 +24,53 @@ AShip::AShip()
 	SetRootComponent(StaticMesh);
 
 	bUseControllerRotationYaw = true;
+    RocketSpawnDelta = 60.0f;
 }
+
+
+// Called every frame
+void AShip::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+    WrapAroundWorld();
+}
+
+// Called to bind functionality to input
+void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShip::Shoot);
+
+	PlayerInputComponent->BindAxis("MoveForward", this, &AShip::MoveForward);
+	PlayerInputComponent->BindAxis("RotateLeft", this, &AShip::RotateLeft);
+	PlayerInputComponent->BindAxis("RotateRight", this, &AShip::RotateRight);
+
+}
+
 
 // Called when the game starts or when spawned.
 void AShip::BeginPlay()
 {
 	Super::BeginPlay();
+
+    // Allow player to move on spawn without being destroyed right away
+    SetActorEnableCollision(false);
+    GetWorld()->GetTimerManager().SetTimer(CollisionSpawnTimerHandle, this, &AShip::EnableCollision, 3.0f, false);
+
+}
+
+void AShip::EnableCollision()
+{
+    SetActorEnableCollision(true);
+    GetWorldTimerManager().ClearTimer(CollisionSpawnTimerHandle);
 }
 
 void AShip::MoveForward(float Amount) 
 {
     float ShipAcceleration = FloatingPawnMovement->Acceleration;
 	FloatingPawnMovement->AddInputVector(GetActorForwardVector() * Amount * ShipAcceleration);
-    
 }
 
 void AShip::RotateLeft(float Amount)
@@ -59,7 +94,7 @@ void AShip::Shoot()
 		SpawnParams.Instigator = this;
 
 		FTransform RocketSpawnTransform;
-		RocketSpawnTransform.SetLocation(GetActorForwardVector() * 100.0f + GetActorLocation());
+		RocketSpawnTransform.SetLocation(GetActorForwardVector() * RocketSpawnDelta + GetActorLocation());
 		RocketSpawnTransform.SetRotation(GetActorRotation().Quaternion());
 		RocketSpawnTransform.SetScale3D(FVector(1.0f));
 
@@ -67,22 +102,33 @@ void AShip::Shoot()
 	}
 }
 
-// Called every frame
-void AShip::Tick(float DeltaTime)
+
+void AShip::WrapAroundWorld()
 {
-	Super::Tick(DeltaTime);
+    AAsteroidsCloneGameState* GameState = Cast<AAsteroidsCloneGameState>(GetWorld()->GetGameState());
+    FVector Location = GetActorLocation();
+    bool bUpdateLocation = false;
+
+    if (Location.X < -GameState->AsteroidWorldSizeX) {
+        Location.X = GameState->AsteroidWorldSizeX;
+        bUpdateLocation = true;
+    }
+    else if (Location.X > GameState->AsteroidWorldSizeX) {
+        Location.X = -GameState->AsteroidWorldSizeX;
+        bUpdateLocation = true;
+    }
+
+    if (Location.Y < -GameState->AsteroidWorldSizeY) {
+        Location.Y = GameState->AsteroidWorldSizeY;
+        bUpdateLocation = true;
+    }
+    else if (Location.Y > GameState->AsteroidWorldSizeY) {
+        Location.Y = -GameState->AsteroidWorldSizeY;
+        bUpdateLocation = true;
+    }
+
+    if (bUpdateLocation) {
+        SetActorLocation(Location);
+    }
+    
 }
-
-// Called to bind functionality to input
-void AShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AShip::Shoot);
-
-	PlayerInputComponent->BindAxis("MoveForward", this, &AShip::MoveForward);
-	PlayerInputComponent->BindAxis("RotateLeft", this, &AShip::RotateLeft);
-	PlayerInputComponent->BindAxis("RotateRight", this, &AShip::RotateRight);
-
-}
-

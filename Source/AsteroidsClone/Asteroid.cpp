@@ -1,8 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Asteroid.h"
-#include "Classes/GameFramework/ProjectileMovementComponent.h"
 #include "Ship.h"
+#include "AsteroidsCloneGameState.h"
+
+#include "Classes/GameFramework/ProjectileMovementComponent.h"
 
 
 // Sets default values
@@ -24,20 +26,6 @@ AAsteroid::AAsteroid()
 
 }
 
-// Called when the game starts or when spawned
-void AAsteroid::BeginPlay()
-{
-	Super::BeginPlay();
-    OnActorHit.AddDynamic(this, &AAsteroid::OnShipHit);
-
-    RandomDegrees = FMath::FRandRange(0.0f, 360.0f);
-    //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, FString::Printf(TEXT("Angle of Asteroid = %f"), RandomDegrees));
-    RandomX = FMath::Cos(FMath::DegreesToRadians(RandomDegrees));
-    RandomY = FMath::Sin(FMath::DegreesToRadians(RandomDegrees));
-
-    MoveDirection = FVector(RandomX, RandomY, 0.0f);
-	
-}
 
 // Called every frame
 void AAsteroid::Tick(float DeltaTime)
@@ -47,6 +35,8 @@ void AAsteroid::Tick(float DeltaTime)
     FVector MoveDelta = MoveDirection * MoveScale;
 
     AddActorWorldOffset(MoveDelta, true, nullptr, ETeleportType::TeleportPhysics);
+
+    WrapAroundWorld();
 
 }
 
@@ -64,6 +54,25 @@ void AAsteroid::OnShipHit(AActor* SelfActor, AActor* OtherActor, FVector NormalI
     }
 }
 
+
+// Called when the game starts or when spawned
+void AAsteroid::BeginPlay()
+{
+	Super::BeginPlay();
+    OnActorHit.AddDynamic(this, &AAsteroid::OnShipHit);
+
+    AsteroidRandomMovement();
+}
+
+void AAsteroid::AsteroidRandomMovement()
+{
+    float RandomDegrees = FMath::FRandRange(0.0f, 360.0f);
+    float RandomX = FMath::Cos(FMath::DegreesToRadians(RandomDegrees));
+    float RandomY = FMath::Sin(FMath::DegreesToRadians(RandomDegrees));
+
+    MoveDirection = FVector(RandomX, RandomY, 0.0f);
+}
+
 void AAsteroid::SpawnShip()
 {
     FActorSpawnParameters ShipSpawnParams;
@@ -79,6 +88,35 @@ void AAsteroid::SpawnShip()
     GetWorld()->SpawnActor<AShip>(ShipClass, ShipSpawnTransform, ShipSpawnParams);
 
     GetWorldTimerManager().ClearTimer(SpawnDelayHandle);
+
 }
 
 
+void AAsteroid::WrapAroundWorld()
+{
+    AAsteroidsCloneGameState* GameState = Cast<AAsteroidsCloneGameState>(GetWorld()->GetGameState());
+    FVector Location = GetActorLocation();
+    bool bUpdateLocation = false;
+
+    if (Location.X < -GameState->AsteroidWorldSizeX) {
+        Location.X = GameState->AsteroidWorldSizeX;
+        bUpdateLocation = true;
+    }
+    else if (Location.X > GameState->AsteroidWorldSizeX) {
+        Location.X = -GameState->AsteroidWorldSizeX;
+        bUpdateLocation = true;
+    }
+
+    if (Location.Y < -GameState->AsteroidWorldSizeY) {
+        Location.Y = GameState->AsteroidWorldSizeY;
+        bUpdateLocation = true;
+    }
+    else if (Location.Y > GameState->AsteroidWorldSizeY) {
+        Location.Y = -GameState->AsteroidWorldSizeY;
+        bUpdateLocation = true;
+    }
+
+    if (bUpdateLocation) {
+        SetActorLocation(Location);
+    }
+}

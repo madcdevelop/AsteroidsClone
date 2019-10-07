@@ -11,12 +11,6 @@ AMediumAsteroid::AMediumAsteroid()
 
 }
 
-// Called when the game starts or when spawned
-void AMediumAsteroid::BeginPlay()
-{
-    Super::BeginPlay();
-
-}
 
 // Called every frame
 void AMediumAsteroid::Tick(float DeltaTime)
@@ -25,3 +19,10 @@ void AMediumAsteroid::Tick(float DeltaTime)
 
 }
 
+
+// Called when the game starts or when spawned
+void AMediumAsteroid::BeginPlay()
+{
+    Super::BeginPlay();
+
+}

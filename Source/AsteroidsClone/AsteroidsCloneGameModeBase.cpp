@@ -3,6 +3,7 @@
 #include "AsteroidsCloneGameModeBase.h"
 #include "AsteroidsClone.h"
 #include "Ship.h"
+
 #include "UObject/ConstructorHelpers.h"
 #include "AsteroidsCloneGameState.h"
 
@@ -16,11 +17,6 @@ AAsteroidsCloneGameModeBase::AAsteroidsCloneGameModeBase()
 
 }
 
-void AAsteroidsCloneGameModeBase::BeginPlay()
-{
-    Super::BeginPlay();
-    ChangeMenuWidget(StartingWidgetClass);
-}
 
 void AAsteroidsCloneGameModeBase::ChangeMenuWidget(TSubclassOf<UUserWidget> NewWidgetClass)
 {
@@ -51,4 +47,11 @@ void AAsteroidsCloneGameModeBase::OnRocketHit(int32 pointsEarned)
         }
     
     }
+}
+
+
+void AAsteroidsCloneGameModeBase::BeginPlay()
+{
+    Super::BeginPlay();
+    ChangeMenuWidget(StartingWidgetClass);
 }

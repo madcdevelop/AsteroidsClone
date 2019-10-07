@@ -18,6 +18,14 @@ public:
 
     AAsteroidsCloneGameState();
 
+public:
+
     int32 Points;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Game")
+    float AsteroidWorldSizeX;
+
+    UPROPERTY(BlueprintReadWrite, Category = "Game")
+    float AsteroidWorldSizeY;
 	
 };

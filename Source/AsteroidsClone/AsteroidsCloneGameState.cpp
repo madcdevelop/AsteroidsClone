@@ -6,5 +6,8 @@
 AAsteroidsCloneGameState::AAsteroidsCloneGameState() 
 {
     Points = 0;
+
+    AsteroidWorldSizeX = 650.0f;
+    AsteroidWorldSizeY = 1150.0f;
 }
 

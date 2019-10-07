@@ -12,16 +12,17 @@ ASmallAsteroid::ASmallAsteroid()
 
 }
 
-// Called when the game starts or when spawned
-void ASmallAsteroid::BeginPlay()
-{
-    Super::BeginPlay();
-
-}
-
 // Called every frame
 void ASmallAsteroid::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
+
+}
+
+
+// Called when the game starts or when spawned
+void ASmallAsteroid::BeginPlay()
+{
+    Super::BeginPlay();
 
 }
