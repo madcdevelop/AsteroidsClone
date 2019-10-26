@@ -20,8 +20,8 @@ AShip::AShip()
 
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMeshComponent");
     StaticMesh->SetConstraintMode(EDOFMode::XYPlane);
-
 	SetRootComponent(StaticMesh);
+
 
 	bUseControllerRotationYaw = true;
     RocketSpawnDelta = 60.0f;
@@ -130,5 +130,4 @@ void AShip::WrapAroundWorld()
     if (bUpdateLocation) {
         SetActorLocation(Location);
     }
-    
 }

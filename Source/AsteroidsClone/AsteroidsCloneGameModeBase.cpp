@@ -40,12 +40,7 @@ void AAsteroidsCloneGameModeBase::OnRocketHit(int32 pointsEarned)
     AAsteroidsCloneGameState* GS = Cast<AAsteroidsCloneGameState>(GameState);
     if (GS != nullptr) 
     {
-        GS->Points += pointsEarned;
-
-        if (GEngine != nullptr) {
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, FString::Printf(TEXT("You scored %d points. you now have %d points"), pointsEarned, GS->Points));
-        }
-    
+        GS->AddPoints(pointsEarned);
     }
 }
 

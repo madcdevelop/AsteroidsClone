@@ -6,8 +6,18 @@
 AAsteroidsCloneGameState::AAsteroidsCloneGameState() 
 {
     Points = 0;
+    PlayerLives = 2;
 
-    AsteroidWorldSizeX = 650.0f;
+    AsteroidWorldSizeX = 700.0f;
     AsteroidWorldSizeY = 1150.0f;
 }
 
+int32 AAsteroidsCloneGameState::GetPoints()
+{
+    return Points;
+}
+
+void AAsteroidsCloneGameState::AddPoints(int32 NewPoints)
+{
+    Points += NewPoints;
+}

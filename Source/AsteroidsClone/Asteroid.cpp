@@ -48,6 +48,11 @@ void AAsteroid::OnShipHit(AActor* SelfActor, AActor* OtherActor, FVector NormalI
         if (ShipClass != nullptr)
         {
             Ship->Destroy();
+            AAsteroidsCloneGameState* GameState = Cast<AAsteroidsCloneGameState>(GetWorld()->GetGameState());
+            if (GameState)
+            {
+                GameState->PlayerLives--;
+            }
             GetWorld()->GetTimerManager().SetTimer(SpawnDelayHandle, this, &AAsteroid::SpawnShip, 3.0f, false);
         }
         
